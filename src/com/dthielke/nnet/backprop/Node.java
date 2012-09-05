@@ -1,4 +1,4 @@
-package com.dthielke.backprop;
+package com.dthielke.nnet.backprop;
 
 import java.util.List;
 

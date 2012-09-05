@@ -1,4 +1,4 @@
-package com.dthielke.backprop;
+package com.dthielke.nnet.backprop;
 
 import java.awt.GridLayout;
 import java.io.FileNotFoundException;
@@ -14,6 +14,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import com.dthielke.nnet.io.DataLoader;
+
 public class Driver {
 
     private static BackPropNetwork network;
@@ -23,22 +25,19 @@ public class Driver {
     private static XYSeries errors = new XYSeries("RMS Error");
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-        int[] structure = { 2, 12, 1 };
+        DataLoader loader = new DataLoader();
+        loader.load("data/wine.data");
+        double[][] inputs = loader.getNormalizedInputs();
+        double[][] targets = loader.getTargets();
+        
+        int[] structure = new int[] {inputs[0].length, 5, targets[0].length};
         network = new BackPropNetwork(structure, 1.0, 0.4, 0.6);
         createGUI();
-        
-        DataLoader loader = new DataLoader();
-        loader.load("data/catheter.data");
-        double[][] inputs = loader.getInputs();
-        double[][] targets = loader.getTargets();
 
-        int draw = 0;
         while (true) {
             int dataset = (int) (Math.random() * inputs.length);
-            network.train(inputs[dataset], targets[dataset], 0.1, 0.0, 0.0);
-            if (++draw == 50) {
-                draw = 0;
-                networkPanel.repaint();
+            synchronized (network) {
+                network.train(inputs[dataset], targets[dataset], 0.25, 0.75, 0.0);
             }
             synchronized (errorBuffer) {
                 errorBuffer.add(network.getError());
@@ -65,7 +64,26 @@ public class Driver {
         frame.pack();
         frame.setVisible(true);
 
+        new Thread(new VisualizationUpdater()).start();
         new Thread(new GraphUpdater()).start();
+    }
+
+    static class VisualizationUpdater implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (network) {
+                    networkPanel.repaint();
+                }
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+
     }
 
     static class GraphUpdater implements Runnable {

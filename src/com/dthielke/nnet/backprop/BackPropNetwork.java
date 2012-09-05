@@ -1,4 +1,4 @@
-package com.dthielke.backprop;
+package com.dthielke.nnet.backprop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ public class BackPropNetwork {
     private List<Node>[] layers;
     private Node bias;
     
-    @SuppressWarnings("unchecked")
     public BackPropNetwork(int[] structure, double bias, double minWeight, double maxWeight) {
         minWeight = Math.abs(minWeight);
         maxWeight = Math.abs(maxWeight);
@@ -23,9 +22,9 @@ public class BackPropNetwork {
                 if (i == 0) {
                     layers[i].add(new InputNode());
                 } else if (i == structure.length - 1) {
-                    layers[i].add(new OutputNode(HyperbolicTangent.getInstance()));
+                    layers[i].add(new OutputNode(Sigmoid.getInstance()));
                 } else {
-                    layers[i].add(new HiddenNode(HyperbolicTangent.getInstance()));
+                    layers[i].add(new HiddenNode(Sigmoid.getInstance()));
                 }
             }
         }
