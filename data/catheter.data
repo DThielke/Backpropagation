@@ -1,0 +1,21 @@
+% A catheter is passed into a major vein or artery at the femoral region and moved into the heart. The proper length of the introduced catheter has to be guessed by the physician. The aim of the Data is to describe the relation between the catheter length and the patient's height.
+% 1. Height (inches)
+% 2. Weight (pounds)
+% 3. Catheter Length (centimeters)
+
+entries: 12
+inputs: 2
+outputs: 1
+
+0.204569746,0.071955595,0.101900088
+1.938874348,2.125088568,1.691541454
+-0.239479259,-0.100737833,-0.264940228
+-0.071913597,-0.311807578,-0.020380018
+0.43078339,0.532471402,0.835580718
+-0.155696428,-0.810699702,-0.998620858
+0.221326312,0.014391119,0.101900088
+-1.496221724,-1.136898399,-1.976861699
+-0.281370674,-0.196678626,-0.264940228
+-1.412438893,-1.098522082,-0.754060648
+-0.616501998,-0.657194433,0.224180193
+1.478068778,1.568631968,1.324701139
