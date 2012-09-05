@@ -21,6 +21,7 @@ public class Driver {
     private static BackPropNetwork network;
     private static BackPropNetworkPanel networkPanel;
 
+    private static int errorResolution = 10;
     private static List<Double> errorBuffer = new LinkedList<Double>();
     private static XYSeries errors = new XYSeries("RMS Error");
 
@@ -29,19 +30,27 @@ public class Driver {
         loader.load("data/wine.data");
         double[][] inputs = loader.getNormalizedInputs();
         double[][] targets = loader.getTargets();
-        
-        int[] structure = new int[] {inputs[0].length, 5, targets[0].length};
+
+        int[] structure = new int[] { inputs[0].length, 6, targets[0].length };
         network = new BackPropNetwork(structure, 1.0, 0.4, 0.6);
         createGUI();
 
+        double error = 0;
+        int errorCount = 0;
         while (true) {
             int dataset = (int) (Math.random() * inputs.length);
             synchronized (network) {
                 network.train(inputs[dataset], targets[dataset], 0.25, 0.75, 0.0);
             }
-            synchronized (errorBuffer) {
-                errorBuffer.add(network.getError());
+            if (errorCount == errorResolution) {
+                synchronized (errorBuffer) {
+                    errorBuffer.add(Math.sqrt(error / errorCount));
+                }
+                error = 0;
+                errorCount = 0;
             }
+            error += Math.pow(network.getError(), 2);
+            errorCount++;
             Thread.sleep(1);
         }
     }
@@ -96,7 +105,8 @@ public class Driver {
                 synchronized (errorBuffer) {
                     errors.setNotify(false);
                     for (double error : errorBuffer) {
-                        errors.add(++epoch, error);
+                        epoch += errorResolution;
+                        errors.add(epoch, error);
                     }
                     errorBuffer.clear();
                     errors.setNotify(true);
