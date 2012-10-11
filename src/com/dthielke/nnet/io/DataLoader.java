@@ -11,6 +11,11 @@ public class DataLoader {
     private double[][] inputs;
     private double[][] targets;
     
+    /**
+     * Loads a set of training data where each line is an element in the format:
+     *   Input 1, Input 2, ..., Input N: Target 1, Target 2, ..., Target M
+     * where N is the total number of inputs and M is the total number of outputs.
+     */
     public void load(String filename) throws FileNotFoundException {
         List<double[]> inputs = new ArrayList<double[]>();
         List<double[]> targets = new ArrayList<double[]>();

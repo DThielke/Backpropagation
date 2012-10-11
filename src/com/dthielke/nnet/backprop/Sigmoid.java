@@ -1,5 +1,8 @@
 package com.dthielke.nnet.backprop;
 
+/**
+ * Singleton sigmoid function to be used as a node activation function.
+ */
 public class Sigmoid implements DifferentiableFunction {
 
     private static Sigmoid instance;

@@ -53,12 +53,15 @@ public class BackPropNetwork {
             throw new IllegalArgumentException("Input count does not match network dimensions");
         }
         
+        // update input nodes with the training data
         for (int i = 0; i < inputs.length; ++i) {
             ((InputNode) layers[0].get(i)).setValue(inputs[i]);
         }
         
+        // clear cached values from the prior training period
         clearCaches();
         
+        // calculate the new outputs
         List<Node> outputLayer = layers[layers.length - 1];
         double[] outputs = new double[outputLayer.size()];
         for (int i = 0; i < outputs.length; ++i) {
@@ -69,6 +72,7 @@ public class BackPropNetwork {
     }
     
     public double getError() {
+        // calculate SSE of output nodes compared to training data expectations
         double error = 0;
         for (Node node : layers[layers.length - 1]) {
             double e = node.getActivation() - ((OutputNode)node).getTarget();

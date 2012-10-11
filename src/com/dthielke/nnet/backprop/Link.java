@@ -1,5 +1,8 @@
 package com.dthielke.nnet.backprop;
 
+/**
+ * Represents a directed, weighted edge between two nodes.
+ */
 public class Link {
 
     private Node head;
